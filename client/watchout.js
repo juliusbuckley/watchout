@@ -17,9 +17,20 @@ var board = d3.select('.board')
 	
 
 
-var createRandomCoord = function(min, max) {
+function createRandomCoord(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-};
+}
+
+function updateScore() {
+	currentScore
+		.text(gameStats.score.toString());
+}
+
+function updateBestScore() {
+	gameStats.bestScore = Math.max(gameStats.bestScore, gameStats.score);
+	highscore
+		.text(gameStats.bestScore.toString());
+}
 
 var data = d3.range(enemyNum).map(function() {
   return {x:createRandomCoord(20, 940), y:createRandomCoord(20, 460)};
@@ -36,7 +47,7 @@ var enemy = board.selectAll('image enemy')
 	.attr('width', 50);
 
 
-var enemyRandomAttack = function() {
+function enemyRandomAttack() {
   var coordData = [];
   for ( var i = 0; i < enemyNum; i++ ) {
   	// subtract size of enemy
@@ -56,7 +67,7 @@ var enemyRandomAttack = function() {
 		.attr('y', function(d) {
 		  return d.y;
 		});
-};
+}
 
 enemyRandomAttack();
 setInterval(enemyRandomAttack, 1000);
@@ -85,12 +96,6 @@ var hero = board.selectAll('image hero')
 	.attr('width', 75)
 	.call(drag);
 
-
-// var axes = {
-// 	x: d3.scale.linear().domain([0,100]).range([0,gameOptions.width]),
-// 	y: d3.scale.linear().domain([0,100]).range([0,gameOptions.height])
-// };
-
 var currentScore = d3.select('.current-score');
 var highscore = d3.select('.current-highscore');
 var collision = d3.select('current-collision');
@@ -99,16 +104,7 @@ var gameStats = {
 	bestScore: 1000
 };
 
-var updateScore = function() {
-	currentScore
-		.text(gameStats.score.toString());
-};
 
-var updateBestScore = function() {
-	gameStats.bestScore = Math.max(gameStats.bestScore, gameStats.score);
-	highscore
-		.text(gameStats.bestScore.toString());
-};
 
 
 
