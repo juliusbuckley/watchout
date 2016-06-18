@@ -5,19 +5,16 @@ var gameOptions = {
 	padding: 20
 };
 
-// var axes = {
-// 	x: d3.scale.linear().domain([0,100]).range([0,gameOptions.width]),
-// 	y: d3.scale.linear().domain([0,100]).range([0,gameOptions.height])
-// };
-
 var enemyNum = 10;
 
 var board = d3.select('.board')
 	.append('svg:svg')
-	.attr('height', 480)
-	.attr('width', 960)
+	.attr('height', 600) //480
+	.attr('width', 1000) //960
 	.style('border', '1px solid black')
-	.style('margin', 'auto 15%');
+	.style('margin', 'auto 15%')
+	.style('background-image','url(space.jpg)');
+	
 
 
 var createRandomCoord = function(min, max) {
@@ -28,23 +25,24 @@ var data = d3.range(enemyNum).map(function() {
   return {x:createRandomCoord(20, 940), y:createRandomCoord(20, 460)};
 });
 
-var enemy = board.selectAll('image')
+var enemy = board.selectAll('image enemy')
 	.data(data)
 	.enter()
 	.append('image')
-	.attr('xlink:href', 'asteroid.png')
+	.attr('xlink:href', 'kryptonite.gif')
 	.attr('x', function(d) {return d.x;})
 	.attr('y', function(d) {return d.y;})
-	.attr('height', 20)
-	.attr('width', 20);
+	.attr('height', 50)
+	.attr('width', 50);
 
 
 var enemyRandomAttack = function() {
   var coordData = [];
   for ( var i = 0; i < enemyNum; i++ ) {
+  	// subtract size of enemy
     coordData.push({
-      x: createRandomCoord(20, 940),
-      y: createRandomCoord(20, 460)
+      x: createRandomCoord(50, 950),
+      y: createRandomCoord(50, 550)
     });
    }
 
@@ -68,54 +66,49 @@ var drag = d3.behavior.drag()
   .on('drag', function(d) {
     d.x += d3.event.dx;
     d.y += d3.event.dy;
-    d3.select(this).attr('cx', function(d) {
+    d3.select(this).attr('x', function(d) {
       return d.x;
     })
-    .attr('cy', function(d) {
+    .attr('y', function(d) {
       return d.y;
     });
   });
 
-var hero = board.selectAll('circle')
-	.data([{x: 150, y: 150, r:20, ry:20}])
+var hero = board.selectAll('image hero')
+	.data([{x: 150, y: 150}])
 	.enter()
-	.append('circle')
-	.attr('cx', function(d) {return d.x;})
-	.attr('cy', function(d) {return d.y;})
-	.attr('r', function(d) {return d.r;})
-	.attr('style', 'fill: green')
+	.append('image')
+	.attr('x', function(d) {return d.x;})
+	.attr('y', function(d) {return d.y;})
+	.attr('xlink:href', 'hero.png')
+	.attr('height', 75)
+	.attr('width', 75)
 	.call(drag);
 
 
-
-
-
-// var currentScore = d3.select('.current');
-// var highscore = d3.select('.highscore');
-
-// var gameStats = {
-// 	score: 0,
-// 	bestScore: 0
+// var axes = {
+// 	x: d3.scale.linear().domain([0,100]).range([0,gameOptions.width]),
+// 	y: d3.scale.linear().domain([0,100]).range([0,gameOptions.height])
 // };
 
-// var updateScore = function() {
-// 	currentScore
-// 		.text(gameStats.score.toString());
-// };
+var currentScore = d3.select('.current-score');
+var highscore = d3.select('.current-highscore');
+var collision = d3.select('current-collision');
+var gameStats = {
+	score: 100,
+	bestScore: 1000
+};
 
-// var updateBestScore = function() {
-// 	gameStats.bestScore = Math.max(gameStats, gameStats.score);
-// 	highscore
-// 		.text(gameStats.bestScore.toString());
-// };
+var updateScore = function() {
+	currentScore
+		.text(gameStats.score.toString());
+};
 
-// var Player = function() {
-// 	this.path = 'm-7.5,1.62413c0,-5.04095 4.08318,-9.12413 9.12414,-9.12413c5.04096,0 9.70345,5.53145 11.87586,9.12413c-2.02759,2.72372 -6.8349,9.12415 -11.87586,9.12415c-5.04096,0 -9.12414,-4.08318 -9.12414,-9.12415z';
-// 	this.fill = '#ff6600';
-// 	this.x = 0;
-// 	this.y = 0;
-// 	this.r = 5;
-// };
+var updateBestScore = function() {
+	gameStats.bestScore = Math.max(gameStats.bestScore, gameStats.score);
+	highscore
+		.text(gameStats.bestScore.toString());
+};
 
 
 
