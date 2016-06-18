@@ -5,7 +5,16 @@ var gameOptions = {
 	padding: 20
 };
 
+var gameStats = {
+	score: 100,
+	bestScore: 1000
+};
+
 var enemyNum = 10;
+
+var data = d3.range(enemyNum).map(function() {
+  return {x:createRandomCoord(20, 940), y:createRandomCoord(20, 460)};
+});
 
 var board = d3.select('.board')
 	.append('svg:svg')
@@ -15,7 +24,9 @@ var board = d3.select('.board')
 	.style('margin', 'auto 15%')
 	.style('background-image','url(space.jpg)');
 	
-
+var currentScore = d3.select('.current-score');
+var highscore = d3.select('.current-highscore');
+var collision = d3.select('current-collision');
 
 function createRandomCoord(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -24,6 +35,7 @@ function createRandomCoord(min, max) {
 function updateScore() {
 	currentScore
 		.text(gameStats.score.toString());
+		gameStats.score++;
 }
 
 function updateBestScore() {
@@ -32,25 +44,9 @@ function updateBestScore() {
 		.text(gameStats.bestScore.toString());
 }
 
-var data = d3.range(enemyNum).map(function() {
-  return {x:createRandomCoord(20, 940), y:createRandomCoord(20, 460)};
-});
-
-var enemy = board.selectAll('image enemy')
-	.data(data)
-	.enter()
-	.append('image')
-	.attr('xlink:href', 'kryptonite.gif')
-	.attr('x', function(d) {return d.x;})
-	.attr('y', function(d) {return d.y;})
-	.attr('height', 50)
-	.attr('width', 50);
-
-
 function enemyRandomAttack() {
-  var coordData = [];
+	var coordData = [];
   for ( var i = 0; i < enemyNum; i++ ) {
-  	// subtract size of enemy
     coordData.push({
       x: createRandomCoord(50, 950),
       y: createRandomCoord(50, 550)
@@ -69,9 +65,30 @@ function enemyRandomAttack() {
 		});
 }
 
-enemyRandomAttack();
-setInterval(enemyRandomAttack, 1000);
+function collison() {
+	enemy
+		.each(function(d) {
+			var a = Math.abs(hero.attr('x') - d.x);
+	    var b = Math.abs(hero.attr('y') - d.y);
+	    var distanceSquared = Math.sqrt(a) + Math.sqrt(b);
+	    var distance = Math.round(Math.sqrt(distanceSquared));
+	    if (distance <= 4) {
+	    	gameStats.score = 0;
+	    	board
+	    		.style('background-color', 'red');
+	    } 
+		});
+}
 
+var enemy = board.selectAll('image enemy')
+	.data(data)
+	.enter()
+	.append('image')
+	.attr('xlink:href', 'kryptonite.gif')
+	.attr('x', function(d) {return d.x;})
+	.attr('y', function(d) {return d.y;})
+	.attr('height', 50)
+	.attr('width', 50);
 
 var drag = d3.behavior.drag()
   .on('drag', function(d) {
@@ -96,14 +113,10 @@ var hero = board.selectAll('image hero')
 	.attr('width', 75)
 	.call(drag);
 
-var currentScore = d3.select('.current-score');
-var highscore = d3.select('.current-highscore');
-var collision = d3.select('current-collision');
-var gameStats = {
-	score: 100,
-	bestScore: 1000
-};
-
+enemyRandomAttack();
+setInterval(enemyRandomAttack, 1000);
+setInterval(collison, 1000);
+setInterval(updateScore, 100);
 
 
 
