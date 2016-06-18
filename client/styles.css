@@ -2,4 +2,15 @@
 
 /* Note: an asteroid image is included in this repo.
 Feel free to use it if you like. */
+html {
+	margin: auto 15%;
+}
 
+#board {
+	width: 960px
+	height: 480px;
+}
+
+svg {
+  border:1px solid black;
+}
