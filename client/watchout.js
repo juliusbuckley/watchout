@@ -6,8 +6,9 @@ var gameOptions = {
 };
 
 var gameStats = {
-	score: 100,
-	bestScore: 1000
+	score: 0,
+	bestScore: 0, 
+  collisions: 0
 };
 
 var enemyNum = 10;
@@ -26,7 +27,7 @@ var board = d3.select('.board')
 	
 var currentScore = d3.select('.current-score');
 var highscore = d3.select('.current-highscore');
-var collision = d3.select('current-collision');
+var collision = d3.select('.current-collision');
 
 function createRandomCoord(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -74,8 +75,10 @@ function collison() {
 	    var distance = Math.round(Math.sqrt(distanceSquared));
 	    if (distance <= 4) {
 	    	gameStats.score = 0;
-	    	board
-	    		.style('background-color', 'red');
+        gameStats.collisions++
+        collision
+          .text(gameStats.collisions.toString())
+	    	
 	    } 
 		});
 }
@@ -115,8 +118,9 @@ var hero = board.selectAll('image hero')
 
 enemyRandomAttack();
 setInterval(enemyRandomAttack, 1000);
-setInterval(collison, 1000);
-setInterval(updateScore, 100);
+setInterval(collison, 500);
+setInterval(updateScore)
+setInterval(updateBestScore);
 
 
 
