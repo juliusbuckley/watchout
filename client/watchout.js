@@ -75,9 +75,9 @@ function collison() {
 	    var distance = Math.round(Math.sqrt(distanceSquared));
 	    if (distance <= 4) {
 	    	gameStats.score = 0;
-        gameStats.collisions++
+        gameStats.collisions++;
         collision
-          .text(gameStats.collisions.toString())
+          .text(gameStats.collisions.toString());
 	    	
 	    } 
 		});
@@ -119,7 +119,7 @@ var hero = board.selectAll('image hero')
 enemyRandomAttack();
 setInterval(enemyRandomAttack, 1000);
 setInterval(collison, 500);
-setInterval(updateScore)
+setInterval(updateScore);
 setInterval(updateBestScore);
 
 
