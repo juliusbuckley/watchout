@@ -7,8 +7,9 @@ var gameOptions = {
 
 var gameStats = {
 	score: 0,
-	bestScore: 0, 
+	bestScore: 0,
   collisions: 0
+  apples:0
 };
 
 var enemyNum = 10;
@@ -24,10 +25,11 @@ var board = d3.select('.board')
 	.style('border', '1px solid black')
 	.style('margin', 'auto 15%')
 	.style('background-image','url(space.jpg)');
-	
+
 var currentScore = d3.select('.current-score');
 var highscore = d3.select('.current-highscore');
 var collision = d3.select('.current-collision');
+var horchata = d3.select('.current-collision');
 
 function createRandomCoord(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -37,6 +39,12 @@ function updateScore() {
 	currentScore
 		.text(gameStats.score.toString());
 		gameStats.score++;
+}
+
+function updateScore2() {
+  currentScore
+    .text(gameStats.score.toString());
+    gameStats.score++;
 }
 
 function updateBestScore() {
@@ -78,8 +86,8 @@ function collison() {
         gameStats.collisions++;
         collision
           .text(gameStats.collisions.toString());
-	    	
-	    } 
+
+	    }
 		});
 }
 
